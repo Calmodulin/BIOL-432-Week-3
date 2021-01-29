@@ -1,0 +1,58 @@
+---
+title: "Week 3 Assignment"
+name: Yudong Liu
+output: html_document
+---
+## Project Info
+date: January 27th, 2021
+Github Repository Link: https://github.com/Calmodulin/BIOL-432-Week-3.git
+Github user name: Calmodulin 
+
+Load the FallopiaData.csv
+```{r}
+MyData<-read.csv("FallopiaData.csv")
+head(MyData)
+```
+Remove rows with ‘Total’ biomass < 60
+```{r}
+MyDataBig<-subset(MyData,Total>60)
+nrow(MyDataBig)
+```
+
+Reorder the columns so that they are in the order: ‘Total’, ‘Taxon’, ‘Senario’, ‘Nutrients’, and remove the other columns
+```{r}
+MyData2<-subset(MyDataBig[c("Total","Taxon","Scenario","Nutrients")])
+MyData2
+```
+
+Make a new column TotalG, which converts the ‘Total’ column from mg to grams AND replace Total with TotalG, and add it to the dataset.
+```{r}
+MyData2["TotalG"]<-MyData2$Total*1000
+MyData3<-subset(MyData2[c("TotalG","Taxon","Scenario","Nutrients")])
+MyData3
+```
+
+Write a custom function that will take two inputs from the user: 1. a vector of data to process (e.g. column from a data.frame object) and 2. a string that defines what calculation to perform.
+-if string #2 is "Average" then calculate the average value for the column named in vector #1
+-if string #2 is "Sum" then calculate the sum of values for the column named in vector #1
+-if string #2 is "Observations" then count the number of observed values for the column named in vector #1
+-if string #2 is anything else, then output an error to the user 
+```{r}
+Calculation<-function(string,MyData3){
+  if(string=="Average"){print(mean(MyData3))}
+  else if(string=="Sum"){print(sum(MyData3))}
+  else if(string=="Observations"){print(length(MyData3))}
+  else{print("ERROR")}
+}
+```
+
+Write some R code that uses your function to count the total number of observations in the 'Taxon' column.
+```{r}
+Calculation("Observations",MyData3$Taxon)
+```
+
+Write some R code that uses your function  to calculate the average TotalG for each of the two Nutrient concentrations.
+```{r}
+Calculation("Average",MyData3$TotalG)
+```
+Write (i.e. save) the new data to a file called "WrangledData.csv" in the Output folder. 
